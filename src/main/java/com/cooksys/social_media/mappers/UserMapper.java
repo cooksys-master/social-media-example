@@ -12,6 +12,8 @@ public interface UserMapper {
 	
 	User dtoToEntity(UserRequestDto userRequestDto);
 	
+	// We add the mapping value here because the User type doesn't have a "username" field in it.
+	// The username field is stored in the nested credentials object.
 	@Mapping(target = "username", source = "credentials.username")
 	UserResponseDto entityToDto(User user);
 	
