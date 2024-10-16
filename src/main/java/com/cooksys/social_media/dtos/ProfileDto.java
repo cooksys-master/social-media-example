@@ -7,10 +7,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserRequestDto {
+public class ProfileDto {
 	
-	CredentialsDto credentials;
+	private String firstName;
 	
-	ProfileDto profile;
+	private String lastName;
+	
+	private String email;
+	
+	private String phone;
 
 }

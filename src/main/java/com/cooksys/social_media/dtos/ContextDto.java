@@ -1,5 +1,7 @@
 package com.cooksys.social_media.dtos;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,14 +9,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ProfileResponseDto {
+public class ContextDto {
 	
-	private String firstName;
+	private TweetDto target;
 	
-	private String lastName;
+	private List<TweetDto> before;
 	
-	private String email;
-	
-	private String phone;
+	private List<TweetDto> after;
 
 }

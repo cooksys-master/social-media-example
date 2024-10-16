@@ -1,5 +1,7 @@
 package com.cooksys.social_media.dtos;
 
+import java.sql.Timestamp;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,14 +9,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ProfileRequestDto {
+public class HashtagDto {
 	
-	private String firstName;
+	private String label;
 	
-	private String lastName;
+	private Timestamp firstUsed;
 	
-	private String email;
-	
-	private String phone;
+	private Timestamp lastUsed;
 
 }
