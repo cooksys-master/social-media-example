@@ -1,5 +1,7 @@
 package com.cooksys.social_media.mappers;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -16,6 +18,8 @@ public interface UserMapper {
 	// The username field is stored in the nested credentials object.
 	@Mapping(target = "username", source = "credentials.username")
 	UserResponseDto entityToDto(User user);
+
+	List<UserResponseDto> enitiesToDtos(List<User> users);
 	
 
 }
