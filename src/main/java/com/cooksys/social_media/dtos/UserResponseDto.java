@@ -15,6 +15,6 @@ public class UserResponseDto {
 	
 	private ProfileDto profile;
 	
-	private Timestamp timestamp;
+	private Timestamp joined;
 
 }
