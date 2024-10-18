@@ -9,7 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class TweetDto {
+public class TweetResponseDto {
 	
 	private Integer id;
 	
@@ -19,8 +19,8 @@ public class TweetDto {
 	
 	private String content;
 	
-	private TweetDto inReplyTo;
+	private TweetResponseDto inReplyTo;
 	
-	private TweetDto repostOf;
+	private TweetResponseDto repostOf;
 
 }

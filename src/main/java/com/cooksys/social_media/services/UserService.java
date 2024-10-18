@@ -3,11 +3,18 @@ package com.cooksys.social_media.services;
 import java.util.List;
 
 import com.cooksys.social_media.dtos.CredentialsDto;
-import com.cooksys.social_media.dtos.TweetDto;
+import com.cooksys.social_media.dtos.TweetResponseDto;
 import com.cooksys.social_media.dtos.UserRequestDto;
 import com.cooksys.social_media.dtos.UserResponseDto;
+import com.cooksys.social_media.entities.User;
 
 public interface UserService {
+	
+	User getUser(String username);
+	
+	void validateUser(User user, CredentialsDto credentialsDto);
+	
+	void validateCredentialsDto(CredentialsDto credentialsDto);
 
 	List<UserResponseDto> getAllUsers();
 
@@ -27,11 +34,10 @@ public interface UserService {
 
 	List<UserResponseDto> getFollowing(String username);
 
-	List<TweetDto> getUserFeed(String username);
+	List<TweetResponseDto> getUserFeed(String username);
 
-	List<TweetDto> getUserTweets(String username);
+	List<TweetResponseDto> getUserTweets(String username);
 
-	List<TweetDto> getUserMentions(String username);
-
+	List<TweetResponseDto> getUserMentions(String username);
 
 }

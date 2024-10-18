@@ -11,10 +11,10 @@ import lombok.Setter;
 @Setter
 public class ContextDto {
 	
-	private TweetDto target;
+	private TweetResponseDto target;
 	
-	private List<TweetDto> before;
+	private List<TweetResponseDto> before;
 	
-	private List<TweetDto> after;
+	private List<TweetResponseDto> after;
 
 }

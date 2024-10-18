@@ -3,8 +3,10 @@ package com.cooksys.social_media.entities;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLRestriction;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -16,6 +18,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -44,21 +47,44 @@ public class User {
 	private Profile profile;
 
 	@OneToMany(mappedBy = "author")
+	@OrderBy("posted DESC")
+	@SQLRestriction("deleted = false")
 	private List<Tweet> tweets = new ArrayList<>();
 
-	@ManyToMany
-	@JoinTable(name = "user_likes", joinColumns = @JoinColumn(name = "tweet_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+	@ManyToMany(mappedBy = "likes")
+	@OrderBy("posted DESC")
+	@SQLRestriction("deleted = false")
 	private List<Tweet> likes = new ArrayList<>();
 
-	@ManyToMany
-	@JoinTable(name = "user_mentions", joinColumns = @JoinColumn(name = "tweet_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+	@ManyToMany(mappedBy = "mentions")
+	@OrderBy("posted DESC")
+	@SQLRestriction("deleted = false")
 	private List<Tweet> mentions = new ArrayList<>();
 
 	@ManyToMany
+	@SQLRestriction("deleted = false")
 	@JoinTable(name = "followers_following", joinColumns = @JoinColumn(name = "follower_id"), inverseJoinColumns = @JoinColumn(name = "followed_id"))
 	private List<User> followers = new ArrayList<>();
 
 	@ManyToMany(mappedBy = "followers")
+	@SQLRestriction("deleted = false")
 	private List<User> following = new ArrayList<>();
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		return Objects.equals(id, other.id);
+	}
 
 }

@@ -4,14 +4,14 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.cooksys.social_media.dtos.TweetDto;
+import com.cooksys.social_media.dtos.TweetResponseDto;
 import com.cooksys.social_media.entities.Tweet;
 
 @Mapper(componentModel = "spring", uses = {UserMapper.class})
 public interface TweetMapper {
 	
-	TweetDto entityToDto(Tweet tweet);
+	TweetResponseDto entityToDto(Tweet tweet);
 	
-	List<TweetDto> entitiesToDtos(List<Tweet> tweets);
+	List<TweetResponseDto> entitiesToDtos(List<Tweet> tweets);
 
 }

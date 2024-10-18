@@ -3,11 +3,13 @@ package com.cooksys.social_media.services.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.springframework.stereotype.Service;
 
 import com.cooksys.social_media.dtos.CredentialsDto;
-import com.cooksys.social_media.dtos.TweetDto;
+import com.cooksys.social_media.dtos.TweetResponseDto;
 import com.cooksys.social_media.dtos.UserRequestDto;
 import com.cooksys.social_media.dtos.UserResponseDto;
 import com.cooksys.social_media.entities.Tweet;
@@ -30,7 +32,8 @@ public class UserServiceImpl implements UserService {
 	private final UserMapper userMapper;
 	private final TweetMapper tweetMapper;
 
-	private User getUser(String username) {
+	@Override
+	public User getUser(String username) {
 		Optional<User> optionalUser = userRepository.findByCredentialsUsernameAndDeletedFalse(username.toLowerCase());
 		if (optionalUser.isEmpty()) {
 			throw new NotFoundException("No user with the provided username!");
@@ -38,25 +41,19 @@ public class UserServiceImpl implements UserService {
 		return optionalUser.get();
 	}
 
-	private void validateUser(User user, CredentialsDto credentialsDto) {
+	@Override
+	public void validateUser(User user, CredentialsDto credentialsDto) {
 		if (!user.getCredentials().getUsername().equals(credentialsDto.getUsername().toLowerCase())
 				|| !user.getCredentials().getPassword().equals(credentialsDto.getPassword())) {
 			throw new NotAuthorizedException("The username & password combination does not match the stored user.");
 		}
 	}
 
-	private void validateCredentialsDto(CredentialsDto credentialsDto) {
+	@Override
+	public void validateCredentialsDto(CredentialsDto credentialsDto) {
 		if (credentialsDto == null || credentialsDto.getUsername() == null || credentialsDto.getPassword() == null) {
 			throw new BadRequestException("Must provide credentials!");
 		}
-	}
-	
-	private List<Tweet> filterAndSortTweets(List<Tweet> tweets) {
-		return tweets
-				.stream()
-				.filter(tweet -> !tweet.getDeleted())
-				.sorted((tweet1, tweet2) -> tweet1.getPosted().compareTo(tweet2.getPosted()))
-				.toList();
 	}
 
 	@Override
@@ -155,48 +152,32 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<UserResponseDto> getFollowers(String username) {
-		User userToGetFollowers = getUser(username);
-		List<UserResponseDto> result = new ArrayList<>();
-		for (User follower : userToGetFollowers.getFollowers()) {
-			if (!follower.getDeleted()) {
-				result.add(userMapper.entityToDto(follower));
-			}
-		}
-		return result;
+		return userMapper.enitiesToDtos(getUser(username).getFollowers());
 	}
 
 	@Override
 	public List<UserResponseDto> getFollowing(String username) {
-		return userMapper
-				.enitiesToDtos(
-						getUser(username)
-						.getFollowing()
-						.stream()
-						.filter(user -> !user.getDeleted())
-						.toList()
-				);
+		return userMapper.enitiesToDtos(getUser(username).getFollowing());
 	}
 
 	@Override
-	public List<TweetDto> getUserFeed(String username) {
+	public List<TweetResponseDto> getUserFeed(String username) {
 		User userToGetFeed = getUser(username);
-		List<Tweet> userFeed = userToGetFeed.getTweets();
+		SortedSet<Tweet> userFeed = new TreeSet<>(userToGetFeed.getTweets());
 		for (User following : userToGetFeed.getFollowing()) {
 			userFeed.addAll(following.getTweets());
 		}
-		return tweetMapper.entitiesToDtos(filterAndSortTweets(userFeed));
+		return tweetMapper.entitiesToDtos(new ArrayList<>(userFeed));
 	}
 
 	@Override
-	public List<TweetDto> getUserTweets(String username) {
-		User userToGetTweets = getUser(username);
-		return tweetMapper.entitiesToDtos(filterAndSortTweets(userToGetTweets.getTweets()));
+	public List<TweetResponseDto> getUserTweets(String username) {
+		return tweetMapper.entitiesToDtos(getUser(username).getTweets());
 	}
 
 	@Override
-	public List<TweetDto> getUserMentions(String username) {
-		User userToGetMentions = getUser(username);
-		return tweetMapper.entitiesToDtos(filterAndSortTweets(userToGetMentions.getMentions()));
+	public List<TweetResponseDto> getUserMentions(String username) {
+		return tweetMapper.entitiesToDtos(getUser(username).getMentions());
 	}
 
 }
